@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Javascript11</title>
-    <link rel="stylesheet" href="./css/styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <form class="form" autocomplete="off">
-        <label>
-          <input class="input" type="text" placeholder="Search images..." />
-        </label>
-        <button class="button" type="submit">Submit</button>
-      </form>
-      <span class="loader" style="display: none;"></span>
-      <div class="loader visually-hidden"></div>
-      <ul class="gallery"></ul>
-    </div>
-    <script type="module" src="./main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Javascript11</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body>
+  <div class="container">
+    <form class="form" autocomplete="off">
+      <input class="input" type="text" name="searchQuery" placeholder="Search images..." />
+      <button class="button" type="submit">Submit</button>
+    </form>
+    <span class="loader" style="display: none;"></span>
+    <ul class="gallery"></ul>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+
 </html>
+
