@@ -1,63 +1,46 @@
-//library 1
+import { fetchImages } from './js/pixabay-api';
+import { renderImages } from './js/render-functions';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-//library 2
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
-//imports from folder JS
-import { search } from './js/pixabay-api';
-import { renderMarkup } from './js/render-functions';
-
-const galleryList = document.querySelector('.gallery-list');
-const form = document.querySelector('form');
+const form = document.querySelector('.form');
+const input = document.querySelector('.input');
+const galleryList = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
-let lightbox = new SimpleLightbox('.gallery-list a', {});
 
-function elementForSearch() {
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    const myElement = event.target.elements.choiceSearch.value
-      .toLowerCase()
-      .trim();
+function handleSubmit(event) {
+  event.preventDefault();
+  galleryList.innerHTML = '';
+  loader.classList.remove('visually-hidden');
 
-    //checking for an empty input
-    if (!myElement) {
-      iziToast.error({ message: 'Please enter a search word.' });
-      return;
-    } else {
-      // clearing past results
-      galleryList.innerHTML = '';
-    }
+  const inputValue = input.value.trim();
+  if (inputValue === '') {
+    loader.classList.add('visually-hidden');
+    return;
+  }
 
-    // Show loading
-    loader.style.display = 'block';
+  fetchImages(inputValue)
+    .then(images => {
+      loader.classList.add('visually-hidden');
+      if (images.hits.length === 0) {
+        iziToast.error({
+          maxWidth: '370px',
+          position: 'topRight',
+          messageColor: 'white',
+          backgroundColor: 'red',
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+        });
+      } else {
+        loader.classList.add('visually-hidden');
+        renderImages(images, galleryList);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
 
-    //запит до pixabay-API
-    search(myElement)
-      .then(element => {
-        //if are not results
-        if (element.hits.length === 0) {
-          iziToast.info({
-            message:
-              'Sorry, there are no images matching your search query. Please try again!',
-          });
-          //markup generation and gallery update
-        } else {
-          renderMarkup(element.hits, galleryList);
-          lightbox.refresh();
-        }
-      })
-      //error checking
-      .catch(error => {
-        iziToast.error({ message: error.message });
-      })
-      .finally(() => {
-        loader.style.display = 'none';
-        form.reset();
-      });
-  });
+  form.reset();
 }
 
-elementForSearch();
+form.addEventListener('submit', handleSubmit);

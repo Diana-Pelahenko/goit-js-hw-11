@@ -4,30 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HW-11</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Javascript11</title>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-	<div class="container">
-    <!-- Форма пошуку -->
-    <form action="submit">
-		<input type="text" class="search-input" name="choiceSearch" />
-		<button class="btn">Search</button>
-	  </form>
-  
-  <p class="loader-text hidden"> <span class="loader hidden"></span> Loading images, please wait...</p>
-  
-  
-	  <!-- <span class="loader" style="display: none;"></span> -->
-  
-
-	  <ul class="gallery-list"></ul>
-	</div>
-
-
+    <div class="container">
+      <form class="form" autocomplete="off">
+        <label>
+          <input class="input" type="text" placeholder="Search images..." />
+        </label>
+        <button class="button" type="submit">Submit</button>
+      </form>
+      <div class="loader visually-hidden"></div>
+      <ul class="gallery"></ul>
+    </div>
     <script type="module" src="./main.js"></script>
   </body>
 </html>
