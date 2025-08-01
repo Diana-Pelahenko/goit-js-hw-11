@@ -1,58 +1,47 @@
-import { fetchImages } from './js/pixabay-api.js';
+
+import { getImagesByQuery } from './js/pixabay-api';
 import {
-  renderImages,
+  createGallery,
   clearGallery,
   showLoader,
   hideLoader,
-} from './js/render-functions.js';
+} from './js/render-functions';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 const form = document.querySelector('.form');
-const input = document.querySelector('.input');
 
-function handleSubmit(event) {
-  event.preventDefault();
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const query = e.target.elements['search-text'].value.trim();
+
+  if (!query) {
+    iziToast.warning({
+      message: 'Please enter a search term!',
+    });
+    return;
+  }
 
   clearGallery();
   showLoader();
 
-  const inputValue = input.value.trim();
-  if (!inputValue) {
-    hideLoader();
-    return;
-  }
+  try {
+    const data = await getImagesByQuery(query);
 
-  fetchImages(inputValue)
-    .then(images => {
-      hideLoader();
-
-      if (images.length === 0) {
-        iziToast.error({
-          maxWidth: '370px',
-          position: 'topRight',
-          messageColor: 'white',
-          backgroundColor: 'red',
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-        });
-      } else {
-        renderImages(images);
-      }
-    })
-    .catch(error => {
-      hideLoader();
-      iziToast.error({
-        maxWidth: '370px',
-        position: 'topRight',
-        messageColor: 'white',
-        backgroundColor: 'red',
-        message: 'Oops! Something went wrong. Please try again later.',
+    if (data.hits.length === 0) {
+      iziToast.info({
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
       });
-      console.error(error);
+    } else {
+      createGallery(data.hits);
+    }
+  } catch (error) {
+    iziToast.error({
+      message: 'Something went wrong. Try again later.',
     });
-
-  form.reset();
-}
-
-form.addEventListener('submit', handleSubmit);
+  } finally {
+    hideLoader();
+  }
+});

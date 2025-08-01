@@ -1,44 +1,45 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-let lightbox = null;
+const galleryEl = document.querySelector('.gallery');
+const loaderEl = document.querySelector('.loader');
+const loaderTextEl = document.querySelector('.loader-text');
 
-export function clearGallery() {
-  const galleryList = document.querySelector('.gallery');
-  galleryList.innerHTML = '';
-}
+let lightbox = new SimpleLightbox('.gallery a');
 
-export function showLoader() {
-  const loader = document.querySelector('.loader');
-  loader.classList.remove('visually-hidden');
-}
-
-export function hideLoader() {
-  const loader = document.querySelector('.loader');
-  loader.classList.add('visually-hidden');
-}
-
-export function renderImages(images) {
-  const galleryList = document.querySelector('.gallery');
+export function createGallery(images) {
   const markup = images
     .map(
-      ({ webformatURL, largeImageURL, tags }) => `
-      <li class="gallery-item">
-        <a href="${largeImageURL}">
-          <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+      img => `
+      <li>
+        <a href="${img.largeImageURL}">
+          <img src="${img.webformatURL}" alt="${img.tags}" />
         </a>
+        <div>
+          <p>Likes: ${img.likes}</p>
+          <p>Views: ${img.views}</p>
+          <p>Comments: ${img.comments}</p>
+          <p>Downloads: ${img.downloads}</p>
+        </div>
       </li>
     `
     )
     .join('');
-  galleryList.insertAdjacentHTML('beforeend', markup);
 
-  if (lightbox) {
-    lightbox.refresh();
-  } else {
-    lightbox = new SimpleLightbox('.gallery a', {
-      captionsData: 'alt',
-      captionDelay: 250,
-    });
-  }
+  galleryEl.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh();
+}
+
+export function clearGallery() {
+  galleryEl.innerHTML = '';
+}
+
+export function showLoader() {
+  loaderEl.classList.remove('hidden');
+  loaderTextEl.classList.remove('hidden');
+}
+
+export function hideLoader() {
+  loaderEl.classList.add('hidden');
+  loaderTextEl.classList.add('hidden');
 }
